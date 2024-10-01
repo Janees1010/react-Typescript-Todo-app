@@ -1,25 +1,46 @@
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import "./App.css";
 import InputField from "./components/InputField";
 import TodoList from "./components/TodoList";
 import { ToDoContext } from "./context";
 import { DragDropContext, DropResult } from "react-beautiful-dnd";
 import { useCompletedTodoContext } from "./context/CompletedTodoContext";
+import axios,{AxiosResponse} from "axios"
+import { Todo } from "./model";
+
 
 const App: React.FC = () => {
   const [todo, setTodo] = useState<string>("");
- 
-  const context = useContext(ToDoContext);
-
-  const { todos, setTodos } = context;
+  const {todos,setTodos} = useContext(ToDoContext);
   const {completed,setCompleted} = useCompletedTodoContext()
 
-  const handleSubmit = (e: React.FormEvent) => {
+  useEffect(()=>{
+    const fetchTodos = async () => {
+      try {
+          const response: AxiosResponse<Todo[]> = await axios.get("http://localhost:3000");
+          if (response) {
+              setTodos(response.data);
+          }
+      } catch (error) {
+          console.error("Error fetching todos:", error);
+      }
+  };
+
+  fetchTodos(); 
+
+  },[])
+
+  const handleSubmit = async(e: React.FormEvent) => {
     e.preventDefault();
-    if (todo) {
-      setTodos([...todos, { id: Date.now(), todo: todo, isDone: false }]);
-      console.log(todos);
-      setTodo("");
+    if (todo) { 
+      try {
+        const response:AxiosResponse<Todo> = await axios.post("http://localhost:3000/addtodo",{todo})
+        if(response.data){
+           setTodos([...todos,response.data])
+        }
+      } catch (error) {
+        console.log(error);
+      } 
     }
   };
 

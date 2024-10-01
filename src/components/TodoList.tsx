@@ -27,7 +27,7 @@ const TodoList = () => {
               ? todos.map((value:Todo,index) => {
                   return (
                     <TodoCard
-                      key={value?.id}
+                      key={value?._id}
                       index={index}
                       todos={todos}
                       todo={value}
@@ -57,7 +57,7 @@ const TodoList = () => {
               ? completed.map((value:Todo,index) => {
                   return (
                     <TodoCard
-                      key={value?.id}
+                      key={value?._id}
                       index={index}
                       todos={completed}
                       todo={value}

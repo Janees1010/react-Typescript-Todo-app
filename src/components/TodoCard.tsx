@@ -20,22 +20,22 @@ const TodoCard: React.FC<props> = ({ todo, setTodos, todos, index }) => {
 
   const inputRef = useRef<HTMLInputElement>(null);
 
-  const handleDone = (id: number) => {
+  const handleDone = (id:string) => {
     setTodos(
       todos.map((todo) =>
-        todo.id === id ? { ...todo, isDone: !todo.isDone } : todo
+        todo._id === id ? { ...todo, isDone: !todo.isDone } : todo
       )
     );
   };
-  const handleEdit = (e: React.FormEvent, id: number) => {
+  const handleEdit = (e: React.FormEvent, id: string) => {
     e.preventDefault();
     setTodos(
-      todos.map((todo) => (todo.id === id ? { ...todo, todo: editTodo } : todo))
+      todos.map((todo) => (todo._id === id ? { ...todo, todo: editTodo } : todo))
     );
     setIsEdit((prev) => !prev);
   };
-  const handleDelete = (id: number) => {
-    setTodos(todos.filter((todo) => todo.id !== id));
+  const handleDelete = (id:string) => {
+    setTodos(todos.filter((todo) => todo._id !== id));
   };
 
   useEffect(() => {
@@ -43,10 +43,10 @@ const TodoCard: React.FC<props> = ({ todo, setTodos, todos, index }) => {
   }, [isEdit]);
 
   return (
-    <Draggable draggableId={todo.id.toString()} index={index}>
+    <Draggable draggableId={todo._id.toString()} index={index}>
       {(provided) => (
         <form
-          onSubmit={(e) => handleEdit(e, todo.id)}
+          onSubmit={(e) => handleEdit(e, todo._id)}
           className="flex gap-3 justify-between  items-center rounded-md text-xl font-semibold text-white shadow-md min-w-[310px] px-5 py-5 mt-2 bg-blue-600"
           {...provided.draggableProps}
           {...provided.dragHandleProps}
@@ -69,11 +69,11 @@ const TodoCard: React.FC<props> = ({ todo, setTodos, todos, index }) => {
               {" "}
               <FaRegEdit />{" "}
             </span>
-            <span onClick={() => handleDone(todo.id)}>
+            <span onClick={() => handleDone(todo._id)}>
               {" "}
               <MdDone />
             </span>
-            <span onClick={() => handleDelete(todo.id)}>
+            <span onClick={() => handleDelete(todo._id)}>
               <FaDeleteLeft />
             </span>
           </div>
